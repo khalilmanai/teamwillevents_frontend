@@ -1,0 +1,554 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* ======================
+   Default Light Theme
+====================== */
+:root {
+  /* Base */
+  --background: #ffffff;
+  --foreground: #1a1a1a; /* softer than pure black */
+  
+  /* Cards & Popovers */
+  --card: #f9f9f9;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  
+  /* Primary & Secondary */
+  --primary: #25c300; /* your main green */
+  --primary-foreground: #ffffff; 
+  --secondary: #f0f0f0;
+  --secondary-foreground: #25c300;
+
+  /* Muted / Accent */
+  --muted: #f2f2f2;
+  --muted-foreground: #7a7a7a;
+  --accent: #e6ffe6; /* subtle green accent */
+  --accent-foreground: #25c300;
+
+  /* Alerts */
+  --destructive: #e74c3c;
+  --destructive-foreground: #ffffff;
+
+  /* Borders / Inputs */
+  --border: #e0e0e0;
+  --input: #f5f5f5;
+  --ring: #b5d36d; /* softer greenish ring */
+
+  /* Charts */
+  --chart-1: #25c300;
+  --chart-2: #4a90e2;
+  --chart-3: #e6a945;
+  --chart-4: #b58c38;
+  --chart-5: #5d5de6;
+
+  /* Sidebar */
+  --sidebar: #f9f9f9;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #25c300;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0f0f0;
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: #e0e0e0;
+  --sidebar-ring: #b5d36d;
+
+  /* Misc */
+  --radius: 0.625rem;
+}
+
+.dark {
+  /* Base */
+  --background: #141414;
+  --foreground: #f5f5f5;
+
+  /* Cards & Popovers */
+  --card: #1c1c1c;
+  --card-foreground: #f5f5f5;
+  --popover: #1c1c1c;
+  --popover-foreground: #f5f5f5;
+
+  /* Primary & Secondary */
+  --primary: #25c300; /* same green for consistency */
+  --primary-foreground: #141414;
+  --secondary: #262626;
+  --secondary-foreground: #25c300;
+
+  /* Muted / Accent */
+  --muted: #262626;
+  --muted-foreground: #b5b5b5;
+  --accent: #1a2f1a; /* darker green accent */
+  --accent-foreground: #25c300;
+
+  /* Alerts */
+  --destructive: #e74c3c;
+  --destructive-foreground: #f5f5f5;
+
+  /* Borders / Inputs */
+  --border: #404040;
+  --input: #262626;
+  --ring: #3a7d0f;
+
+  /* Charts */
+  --chart-1: #25c300;
+  --chart-2: #4ab3e6;
+  --chart-3: #e6a945;
+  --chart-4: #b58c38;
+  --chart-5: #5d5de6;
+
+  /* Sidebar */
+  --sidebar: #0d0d0d;
+  --sidebar-foreground: #f5f5f5;
+  --sidebar-primary: #25c300;
+  --sidebar-primary-foreground: #141414;
+  --sidebar-accent: #262626;
+  --sidebar-accent-foreground: #f5f5f5;
+  --sidebar-border: #404040;
+  --sidebar-ring: #3a7d0f;
+}
+
+
+/* ======================
+   Eco+ Light - Monochrome
+====================== */
+.ecoplus {
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --secondary: #f2f2f2;
+  --secondary-foreground: #000000;
+  --muted: #f2f2f2;
+  --muted-foreground: #666666;
+  --accent: #e6e6e6;
+  --accent-foreground: #000000;
+  --destructive: #000000;
+  --destructive-foreground: #ffffff;
+  --border: #cccccc;
+  --input: #f2f2f2;
+  --ring: #000000;
+  --chart-1: #333333;
+  --chart-2: #666666;
+  --chart-3: #999999;
+  --chart-4: #cccccc;
+  --chart-5: #4d4d4d;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e6e6e6;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #cccccc;
+  --sidebar-ring: #000000;
+}
+
+/* ======================
+   Eco+ Dark - Monochrome
+====================== */
+.ecoplus-dark {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #000000;
+  --card-foreground: #ffffff;
+  --popover: #000000;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #bebebe;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ffffff;
+  --muted: #1a1a1a;
+  --muted-foreground: #999999;
+  --accent: #262626;
+  --accent-foreground: #ffffff;
+  --destructive: #ffffff;
+  --destructive-foreground: #000000;
+  --border: #4d4d4d;
+  --input: #1a1a1a;
+  --ring: #ffffff;
+  --chart-1: #cccccc;
+  --chart-2: #999999;
+  --chart-3: #666666;
+  --chart-4: #333333;
+  --chart-5: #b3b3b3;
+  --sidebar: #0d0d0d;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #262626;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #4d4d4d;
+  --sidebar-ring: #ffffff;
+}
+
+/* ======================
+   Base Styles & Theme Utilities
+====================== */
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: var(--ring);
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  html {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Smooth theme transitions */
+  .theme-transitioning,
+  .theme-transitioning * {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                fill 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                stroke 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+}
+
+@layer utilities {
+  /* Theme transition utility */
+  .theme-transition {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Card theme utilities */
+  .theme-card-filled {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+  
+  .theme-card-outline {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 2px solid var(--border);
+    box-shadow: none;
+  }
+  
+  /* Button theme utilities */
+  .theme-button-filled {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+  
+  .theme-button-filled:hover {
+    opacity: 0.9;
+  }
+  
+  .theme-button-outline {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 2px solid var(--border);
+  }
+  
+  .theme-button-outline:hover {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+  
+  /* Popover theme utilities */
+  .theme-popover-filled {
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+  
+  .theme-popover-outline {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 2px solid var(--border);
+    box-shadow: none;
+  }
+
+  /* Dialog theme utilities */
+  .theme-dialog-filled {
+    background-color: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+  
+  .theme-dialog-outline {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 2px solid var(--border);
+    box-shadow: none;
+  }
+  
+  /* Auto-adaptive theme classes */
+  .theme-adaptive-card {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+  
+  .ecoplus .theme-adaptive-card,
+  .ecoplus-dark .theme-adaptive-card {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 2px solid var(--border);
+    box-shadow: none;
+  }
+  
+  .theme-adaptive-button {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+  
+  .ecoplus .theme-adaptive-button,
+  .ecoplus-dark .theme-adaptive-button {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 2px solid var(--border);
+    box-shadow: none;
+  }
+  
+  .theme-adaptive-popover {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+  
+  .ecoplus .theme-adaptive-popover,
+  .ecoplus-dark .theme-adaptive-popover {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 2px solid var(--border);
+    box-shadow: none;
+  }
+
+  .theme-adaptive-dialog {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+  
+  .ecoplus .theme-adaptive-dialog,
+  .ecoplus-dark .theme-adaptive-dialog {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 2px solid var(--border);
+    box-shadow: none;
+  }
+
+  /* Enhanced focus states for accessibility */
+  .theme-focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  
+  .theme-focus:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Theme-aware shadows */
+  .theme-shadow-sm {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+  
+  .ecoplus .theme-shadow-sm,
+  .ecoplus-dark .theme-shadow-sm {
+    box-shadow: none;
+  }
+  
+  .theme-shadow-md {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+  
+  .ecoplus .theme-shadow-md,
+  .ecoplus-dark .theme-shadow-md {
+    box-shadow: none;
+  }
+
+  /* Theme-aware borders */
+  .theme-border {
+    border: 1px solid var(--border);
+  }
+  
+  .ecoplus .theme-border,
+  .ecoplus-dark .theme-border {
+    border: 2px solid var(--border);
+  }
+
+  /* Eco+ theme specific enhancements */
+  .ecoplus .eco-accent {
+    color: var(--primary);
+  }
+  
+  .ecoplus-dark .eco-accent {
+    color: var(--primary);
+  }
+
+  /* Theme-aware text colors */
+  .theme-text-primary {
+    color: var(--primary);
+  }
+  
+  .theme-text-muted {
+    color: var(--muted-foreground);
+  }
+  
+  .theme-text-accent {
+    color: var(--accent-foreground);
+  }
+
+  /* Theme-aware background utilities */
+  .theme-bg-card {
+    background-color: var(--card);
+  }
+  
+  .theme-bg-muted {
+    background-color: var(--muted);
+  }
+  
+  .theme-bg-accent {
+    background-color: var(--accent);
+  }
+}
+
+/* ======================
+   Component-specific theme styles
+====================== */
+
+/* Enhanced card styling */
+[data-slot="card"] {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.ecoplus [data-slot="card"],
+.ecoplus-dark [data-slot="card"] {
+  background-color: transparent;
+  color: var(--foreground);
+  border: 2px solid var(--border);
+  box-shadow: none;
+}
+
+/* Enhanced button styling */
+[data-slot="button"] {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+[data-slot="button"]:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Enhanced popover styling */
+[data-slot="popover-content"] {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--popover);
+  color: var(--popover-foreground);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.ecoplus [data-slot="popover-content"],
+.ecoplus-dark [data-slot="popover-content"] {
+  background-color: transparent;
+  color: var(--foreground);
+    border: 2px solid var(--border);
+    box-shadow: none;
+}
+
+/* Enhanced dialog styling */
+[data-slot="dialog-content"] {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.ecoplus [data-slot="dialog-content"],
+.ecoplus-dark [data-slot="dialog-content"] {
+  background-color: transparent;
+  color: var(--foreground);
+  border: 2px solid var(--border);
+  box-shadow: none;
+}
+
+/* Theme-aware scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Theme-aware selection */
+::selection {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Print styles */
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
