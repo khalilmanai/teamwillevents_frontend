@@ -1,7 +1,3 @@
-// French translations for the event management app
-
-import { features } from "process";
-
 const fr = {
   common: {
     loading: "Chargement...",
@@ -28,6 +24,8 @@ const fr = {
     locale: "fr-FR",
     loadingEventDetails: "Chargement des détails de l'événement...",
     tryAgain: "Réessayer",
+    unlimited: "Illimité",
+    noEventTitle: "Événement sans titre",
   },
   auth: {
     login: "Connexion",
@@ -45,22 +43,22 @@ const fr = {
     passwordRequired: "Le mot de passe est requis",
     passwordMinLength: "Le mot de passe doit contenir au moins 6 caractères",
     demoAccounts: "Comptes de démonstration :",
-    manager: "manager",
+    manager: "Gestionnaire",
     employee: "Employé",
-    features : {
-        eventManagement: {
-          title: "Gestion d'événements",
-          "description": "Organisez et gérez vos événements facilement avec des outils puissants."
-        },
-        teamCollaboration: {
-          title: "Collaboration d'équipe",
-          description: "Collaborez avec votre équipe pour créer des événements mémorables."
-        },
-        successAnalytics: {
-          title: "Analyse de succès",
-          description: "Suivez le succès de vos événements avec des analyses et des insights détaillés."
-        }
-      }
+    features: {
+      eventManagement: {
+        title: "Gestion d'événements",
+        description: "Organisez et gérez vos événements facilement avec des outils puissants.",
+      },
+      teamCollaboration: {
+        title: "Collaboration d'équipe",
+        description: "Collaborez avec votre équipe pour créer des événements mémorables.",
+      },
+      successAnalytics: {
+        title: "Analyse de succès",
+        description: "Suivez le succès de vos événements avec des analyses et des insights détaillés.",
+      },
+    },
   },
   navigation: {
     overview: "Aperçu",
@@ -75,7 +73,7 @@ const fr = {
     myRegistrations: "Mes inscriptions",
     analytics: "Statistiques",
     profile: "Profil",
-    draft:"Brouillons",
+    draft: "Brouillons",
     settings: "Paramètres",
   },
   profile: {
@@ -98,7 +96,7 @@ const fr = {
     address: "Adresse",
     addressPlaceholder: "Votre adresse complète",
     department: "Département",
-    departmentPlaceholder: "manager, IT, RH...",
+    departmentPlaceholder: "gestionnaire, IT, RH...",
     position: "Poste",
     positionPlaceholder: "Votre fonction",
     location: "Lieu",
@@ -121,10 +119,13 @@ const fr = {
     maxFileSize: "La taille du fichier ne doit pas dépasser 30MB",
     invalidFileType: "Type de fichier non supporté. Utilisez JPG, PNG ou GIF",
     avatarHelp: "Formats acceptés : JPG, PNG, GIF, WebP – max 30MB.",
-      zoomLevel: "Niveau de zoom",
-      cropAvatar: "Recadrer votre avatar",
-      nameMinLength: "Le nom doit contenir au moins 2 caractères",
-      selectAvatarFile: "Sélectionner un fichier d'avatar",
+    zoomLevel: "Niveau de zoom",
+    cropAvatar: "Recadrer votre avatar",
+    nameMinLength: "Le nom doit contenir au moins 2 caractères",
+    selectAvatarFile: "Sélectionner un fichier d'avatar",
+    hidePassword: "Masquer le mot de passe",
+    showPassword: "Afficher le mot de passe",
+    passwordRequirements: "Le mot de passe doit contenir au moins 8 caractères avec majuscule, minuscule et chiffre.",
   },
   events: {
     managementDashboard: "Tableau de bord des événements",
@@ -136,7 +137,7 @@ const fr = {
       meetup: "Rencontre",
       social: "Social",
       sports: "Sports",
-      other: "Autre"
+      other: "Autre",
     },
     noSearchResults: "Essayez de modifier votre recherche",
     noRegisteredEvents: "Vous n'êtes inscrit à aucun événement pour le moment",
@@ -173,9 +174,7 @@ const fr = {
     draft: "Brouillon",
     published: "Publié",
     cancelled: "Annulé",
-   
     subtitle: "Découvrez et participez aux événements de votre entreprise",
-  
     allCategories: "Toutes catégories",
     availableEvents: "Événements disponibles",
     registeredEvents: "Événements inscrits",
@@ -183,16 +182,14 @@ const fr = {
     myRegistrations: "Mes inscriptions",
     all: "Tous",
     noEventsFound: "Aucun événement trouvé",
-
-    resetSearch: "Réinitialiser la recherche"
-    
+    resetSearch: "Réinitialiser la recherche",
   },
   registrations: {
     loading: "Chargement de vos inscriptions",
     fetchingEvents: "Nous récupérons les événements auxquels vous êtes inscrit...",
     noRegistrations: "Aucune inscription pour le moment",
     browseEvents: "Parcourir les événements",
-    myRegistrations: "Mes inscriptions"
+    myRegistrations: "Mes inscriptions",
   },
   chat: {
     eventChat: "Chat de l'événement",
@@ -219,7 +216,7 @@ const fr = {
     searchUsers: "Rechercher des utilisateurs...",
     noUsersFound: "Aucun utilisateur trouvé.",
     unassigned: "Non assigné",
-    noUserAssigned: "Aucun utilisateur assigné"
+    noUserAssigned: "Aucun utilisateur assigné",
   },
   forgotPassword: {
     title: "Mot de passe oublié",
@@ -230,9 +227,9 @@ const fr = {
     enterCode: "Entrez le code de vérification",
     verifyCode: "Vérifier le code",
     newPassword: "Nouveau mot de passe",
-    confirmPassword: "Confirmer le mot de passe"
+    confirmPassword: "Confirmer le mot de passe",
   },
-   createEventPage: {
+  createEventPage: {
     subtitle: "Créez un événement sans effort",
     title: "Création d'événement",
     transcriptionError: "Erreur lors du traitement de la transcription",
@@ -241,9 +238,9 @@ const fr = {
     eventTitle: "Titre de l'événement",
     eventTitlePlaceholder: "Entrez le titre de l'événement",
     location: "Lieu",
-        tabs: {
+    tabs: {
       voice: "Commande vocale",
-      manual: "Enregistrement manuel",
+      manual: "Saisie manuelle",
     },
     locationPlaceholder: "Entrez le lieu de l'événement",
     date: "Date",
@@ -254,6 +251,8 @@ const fr = {
     budgetPlaceholder: "Entrez le budget",
     budgetRequired: "Le budget est requis",
     tags: "Tags",
+    uploadImage: "Importer une image",
+    titlePlaceholder: "Entrez le titre de l'événement",
     tagsPlaceholder: "Ajoutez des tags séparés par des virgules",
     tagsHelp: "Les tags aident à catégoriser votre événement",
     description: "Description",
@@ -271,8 +270,47 @@ const fr = {
     preview: "Aperçu de l'événement",
     dateNotSet: "Date non définie",
     locationNotSet: "Lieu non défini",
+    pageDescription: "Créez des événements engageants avec notre formulaire intuitif ou commandes vocales",
+    detailedForms: "Formulaires détaillés",
+    detailedFormsDesc: "Formulaires complets avec toutes les informations necesarias sur l'événement",
+    livePreview: "Aperçu en direct",
+    livePreviewDesc: "Voyez comment votre événement apparaîtra aux participants",
+    mediaUpload: "Téléchargement de médias",
+    mediaUploadDesc: "Ajoutez des images et des médias pour faire ressortir votre événement",
+    eventDetails: "Détails de l'événement",
+    eventManager: "Gestionnaire d'événement",
+    assignManager: "Assigner un gestionnaire",
+    selectManagerPlaceholder: "Sélectionner un gestionnaire...",
+    searchManager: "Rechercher des gestionnaires...",
+    noManagerFound: "Aucun gestionnaire trouvé",
+    loadingManagers: "Chargement des gestionnaires...",
+    managerResponsibility: "Le gestionnaire sélectionné sera responsable de cet événement",
+    eventSeries: "Série d'événements",
+    noSeries: "Aucune série",
+    selectExisting: "Sélectionner existante",
+    createNew: "Créer nouvelle",
+    selectEventSeries: "Sélectionner une série d'événements",
+    loadingSeries: "Chargement des séries...",
+    chooseSeriesPlaceholder: "Choisir une série...",
+    newSeriesName: "Nom de la nouvelle série",
+    newSeriesPlaceholder: "Entrez le nom de la série...",
+    newSeriesHelp: "Créez une nouvelle série pour regrouper les événements connexes",
+    managerLabel: "Gestionnaire",
+    seriesLabel: "Série",
+    eventPreviewAlt: "Image d'aperçu de l'événement",
+    at: "à",
+    maxParticipantsLabel: "participants maximum",
+    tagsLabel: "Tags",
+    saveAsDraft: "Sauvegarder en brouillon",
+    highConfidence: "Confiance élevée",
+    aiContent: "Contenu généré par IA",
+    suggestedTitle: "Titre suggéré",
+    suggestedDescription: "Description suggérée",
+    suggestedTags: "Tags suggérés",
+    aiGenerating: "Génération IA en cours...",
+    saveDraft: "Sauvegarder en brouillon",
+    draft: "Brouillon",
   },
-
   voice: {
     startRecording: "Commencer l'enregistrement",
     stopRecording: "Arrêter l'enregistrement",
@@ -315,25 +353,25 @@ const fr = {
   home: {
     E: "E",
     TeamwillEvents: "TeamwillEvents",
-    footerDescription: "The modern solution for corporate event management.",
-    product: "Product",
-    featuresLink: "Features",
-    pricing: "Pricing",
+    footerDescription: "La solution moderne pour la gestion d'événements d'entreprise.",
+    product: "Produit",
+    featuresLink: "Fonctionnalités",
+    pricing: "Tarification",
     api: "API",
-    integrations: "Integrations",
+    integrations: "Intégrations",
     support: "Support",
     documentation: "Documentation",
     guides: "Guides",
     faqLink: "FAQ",
     contact: "Contact",
-    contactEmail: "Contact email",
-    contactPhone: "Contact phone",
-    contactLocation: "Contact address",
-    rightsReserved: "All rights reserved.",
+    contactEmail: "Email de contact",
+    contactPhone: "Téléphone de contact",
+    contactLocation: "Adresse de contact",
+    rightsReserved: "Tous droits réservés.",
     title: "Votre plateforme événementielle tout-en-un chez Teamwill",
     liveChatActive: "Chat en temps réel actif",
     voiceCommands: "Commandes vocales disponibles",
-    newVersion: "Nouvelle version disponible !",
+  
     subtitle:
       "Plateforme moderne avec chat en temps réel, création par commande vocale et gestion intelligente des participants.",
     getStarted: "Commencer",
@@ -363,7 +401,7 @@ const fr = {
     testimonial1:
       "TeamwillEvents a révolutionné notre façon d'organiser les événements d'entreprise. L'interface est intuitive et les fonctionnalités de chat en temps réel sont fantastiques.",
     testimonial1Author: "Marie Dubois",
-    testimonial1Role: "Directrice manager, TechCorp",
+    testimonial1Role: "Directrice gestionnaire, TechCorp",
     testimonial2:
       "La création d'événements par commande vocale nous fait gagner un temps précieux. Une solution vraiment innovante !",
     testimonial2Author: "Pierre Martin",
@@ -383,8 +421,7 @@ const fr = {
     faqAnswer3:
       "Chaque événement dispose d'un chat dédié où les participants peuvent échanger. Les messages sont synchronisés en temps réel.",
     faqQuestion4: "Y a-t-il une limite au nombre de participants ?",
-    faqAnswer4:
-      "Vous définissez vous-même le nombre maximum de participants pour chaque événement selon vos besoins.",
+    faqAnswer4: "Vous définissez vous-même le nombre maximum de participants pour chaque événement selon vos besoins.",
     contactUs: "Nous contacter",
     contactSubtitle: "Une question ? Notre équipe est là pour vous aider",
     getInTouch: "Prendre contact",
@@ -431,7 +468,7 @@ const fr = {
     contactSupportBtn: "Contacter le support",
     thankYou: "Merci pour votre patience. Nous serons bientôt de retour !",
   },
-    eventDetails: {
+  eventDetails: {
     actions: "Actions",
     share: "Partager",
     save: "Enregistrer",
@@ -451,13 +488,13 @@ const fr = {
     status: {
       ongoing: "En cours",
       upcoming: "À venir",
-      ended: "Terminé"
+      ended: "Terminé",
     },
     registerButton: "S'inscrire à cet événement",
     registeredButton: "Déjà inscrit",
     registeringButton: "Inscription en cours...",
     cancelButton: "Annuler l'inscription",
-    cancellingButton: "Annulation en cours..."
+    cancellingButton: "Annulation en cours...",
   },
   eventCard: {
     cancelButton: "Annuler",
@@ -486,121 +523,138 @@ const fr = {
     errorMarkingRead: "Échec du marquage de la notification comme lue",
     errorMarkingAllRead: "Échec du marquage de toutes les notifications comme lues",
   },
-  budget: "Budget",
-  budgetPlaceholder: "Entrez le budget de l'événement",
-  budgetRequired: "Le budget est requis",
+  budget: {
+    budgetPlaceholder: "Entrez le budget de l'événement",
+    budgetRequired: "Le budget est requis",
+  },
   publish: "Publier l'événement",
   required: "Ce champ est requis",
-  
   statistics: {
-loading: "Chargement des analyses complètes...",
-error: {
-title: "Erreur lors du chargement des analyses",
-subtitle: "Veuillez essayer de rafraîchir la page",
-retry: "Réessayer"
-},
-noData: "Aucune donnée d'événement disponible",
-title: "Analyses Complètes de l'Événement",
-subtitle: "Aperçus complets et métriques de performance pour {{eventTitle}}",
-badges: {
-unread: "{{count}} non lu(s)",
-status: "Statut"
-},
-overview: {
-totalParticipants: "Total des Participants",
-participantGrowth: "{{growth}}% vs moyenne de la série",
-taskCompletion: "Achèvement des Tâches",
-tasksCompleted: "{{completed}}/{{total}} tâches",
-budgetStatus: "État du Budget",
-budgetUsed: "{{actual}}$ / {{planned}}$",
-notifications: "Notifications",
-notificationsUnread: "{{count}} non lu(s)",
-daysUntilEvent: "Jours Jusqu'à l'Événement",
-daysRemaining: "jours restants",
-eventPassed: "événement passé",
-capacityFill: "Taux de Remplissage",
-capacityUsed: "{{current}}/{{max}}"
-},
-tasks: {
-completedTasks: "Tâches Terminées",
-inProgress: "En Cours",
-pendingTasks: "Tâches en Attente",
-assignedUsers: "Utilisateurs Assignés",
-statusDistribution: "Distribution du Statut des Tâches",
-topContributors: "Meilleurs Contributeurs",
-noAssignments: "Aucune assignation de tâche pour le moment",
-timeline: "Chronologie Complète des Tâches",
-progress: "Progrès",
-assigned: "{{count}} assigné(s)",
-due: "Échéance {{date}}",
-created: "Créé :",
-updated: "Mis à jour :",
-assignedBy: "Assigné par :",
-event: "Événement :",
-system: "Système",
-status: {
-done: "Terminé",
-inProgress: "En Cours",
-accepted: "Accepté",
-rejected: "Rejeté",
-pending: "En Attente",
-todo: "À Faire"
-},
-priority: {
-high: "Élevée",
-medium: "Moyenne",
-low: "Faible"
-}
-},
-budget: {
-title: "Analyse Complète du Budget",
-planned: "Budget Planifié",
-actual: "Dépenses Réelles",
-remaining: "Restant",
-variance: "Écart",
-over: "Dépassement de Budget",
-under: "Sous le Budget",
-onTrack: "Sur la Bonne Voie",
-categories: "Catégories de Budget",
-noCosts: "Aucun élément de coût enregistré pour le moment"
-},
-participants: {
-title: "Analyses des Participants",
-demographics: "Démographie",
-roleDistribution: "Distribution des Rôles",
-jobDistribution: "Distribution des Emplois",
-engagement: "Métriques d'Engagement",
-averageAge: "Âge Moyen",
-years: "ans",
-genderSplit: "Répartition par Genre",
-male: "Homme",
-female: "Femme",
-other: "Autre",
-notSpecified: "Non Spécifié",
-noParticipants: "Aucun participant inscrit pour le moment"
-},
-communication: {
-title: "Analyses de Communication",
-totalNotifications: "Total des Notifications",
-unread: "Non Lu",
-readRate: "Taux de Lecture",
-recentNotifications: "Notifications Récentes",
-types: {
-info: "Info",
-warning: "Avertissement",
-error: "Erreur",
-success: "Succès"
-}
-},
-series: {
-title: "Performance de la Série",
-participationTrends: "Tendances de Participation",
-averageParticipants: "Participants Moyens",
-totalEvents: "Total des Événements",
-seriesGrowth: "Croissance de la Série",
-noSeriesData: "Aucune donnée de série disponible"
-}
-}
-}
+    loading: "Chargement des analyses complètes...",
+    error: {
+      title: "Erreur lors du chargement des analyses",
+      subtitle: "Veuillez essayer de rafraîchir la page",
+      retry: "Réessayer",
+    },
+    noData: "Aucune donnée d'événement disponible",
+    title: "Analyses Complètes de l'Événement",
+    subtitle: "Aperçus complets et métriques de performance pour {eventTitle}",
+    badges: {
+      unread: "{count} non lu(s)",
+      status: "Statut",
+    },
+    overview: {
+      totalParticipants: "Total des Participants",
+      participantGrowth: "{growth}% vs moyenne de la série",
+      taskCompletion: "Achèvement des Tâches",
+      tasksCompleted: "{completed}/{total} tâches",
+      budgetStatus: "État du Budget",
+      budgetUsed: "{actual}$ / {planned}$",
+      notifications: "Notifications",
+      notificationsUnread: "{count} non lu(s)",
+      daysUntilEvent: "Jours Jusqu'à l'Événement",
+      daysRemaining: "jours restants",
+      eventPassed: "événement passé",
+      capacityFill: "Taux de Remplissage",
+      capacityUsed: "{current}/{max}",
+    },
+    tasks: {
+      completedTasks: "Tâches Terminées",
+      inProgress: "En Cours",
+      pendingTasks: "Tâches en Attente",
+      assignedUsers: "Utilisateurs Assignés",
+      statusDistribution: "Distribution du Statut des Tâches",
+      topContributors: "Meilleurs Contributeurs",
+      noAssignments: "Aucune assignation de tâche pour le moment",
+      timeline: "Chronologie Complète des Tâches",
+      progress: "Progrès",
+      assigned: "{count} assigné(s)",
+      due: "Échéance {date}",
+      created: "Créé :",
+      updated: "Mis à jour :",
+      assignedBy: "Assigné par :",
+      event: "Événement :",
+      system: "Système",
+      status: {
+        done: "Terminé",
+        inProgress: "En Cours",
+        accepted: "Accepté",
+        rejected: "Rejeté",
+        pending: "En Attente",
+        todo: "À Faire",
+      },
+      priority: {
+        high: "Élevée",
+        medium: "Moyenne",
+        low: "Faible",
+      },
+    },
+    budget: {
+      title: "Analyse Complète du Budget",
+      planned: "Budget Planifié",
+      actual: "Dépenses Réelles",
+      remaining: "Restant",
+      variance: "Écart",
+      over: "Dépassement de Budget",
+      under: "Sous le Budget",
+      onTrack: "Sur la Bonne Voie",
+      categories: "Catégories de Budget",
+      noCosts: "Aucun élément de coût enregistré pour le moment",
+    },
+    participants: {
+      title: "Analyses des Participants",
+      demographics: "Démographie",
+      roleDistribution: "Distribution des Rôles",
+      jobDistribution: "Distribution des Emplois",
+      engagement: "Métriques d'Engagement",
+      averageAge: "Âge Moyen",
+      years: "ans",
+      genderSplit: "Répartition par Genre",
+      male: "Homme",
+      female: "Femme",
+      other: "Autre",
+      notSpecified: "Non Spécifié",
+      noParticipants: "Aucun participant inscrit pour le moment",
+    },
+    communication: {
+      title: "Analyses de Communication",
+      totalNotifications: "Total des Notifications",
+      unread: "Non Lu",
+      readRate: "Taux de Lecture",
+      recentNotifications: "Notifications Récentes",
+      types: {
+        info: "Info",
+        warning: "Avertissement",
+        error: "Erreur",
+        success: "Succès",
+      },
+    },
+    series: {
+      title: "Performance de la Série",
+      participationTrends: "Tendances de Participation",
+      averageParticipants: "Participants Moyens",
+      totalEvents: "Total des Événements",
+      seriesGrowth: "Croissance de la Série",
+      noSeriesData: "Aucune donnée de série disponible",
+    },
+  },
+  charts: {
+    taskDistribution: "Distribution des Tâches",
+    budgetBreakdown: "Répartition du Budget",
+    progressTimeline: "Chronologie des Progrès",
+    completed: "Terminé",
+    inProgress: "En Cours",
+    pending: "En Attente",
+    venue: "Lieu",
+    catering: "Restauration",
+    marketing: "Marketing",
+    equipment: "Équipement",
+    other: "Autre",
+    week: "Semaine {week}",
+    tasksCompleted: "Tâches Terminées",
+    budgetSpent: "Budget Dépensé",
+    participantsRegistered: "Participants Inscrits",
+  },
+};
 
 export default fr;

@@ -35,6 +35,7 @@ export interface Event {
   currentParticipants: number;
   imageUrl?: string;
   createdBy: string;
+  category?: string;
   status: EventStatus;
   tags: string[];
   isRegistered?: boolean;

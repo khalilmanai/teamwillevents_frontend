@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import {
   Calendar,
   Clock,
@@ -11,7 +10,6 @@ import {
   Save,
   X,
   ImageIcon,
-  Users,
   Tag,
   Info,
   MoreVertical,
@@ -20,14 +18,37 @@ import {
   AlertTriangle,
   CheckCircle,
   User2,
+  Link,
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useLanguage } from "@/lib/i18n"
 import { apiService } from "@/lib/api"
 import { useRouter } from "next/navigation"
-import type { Event } from "@/lib/api"
-import { motion, AnimatePresence } from "framer-motion" // Added for animations
-import type { JSX } from "react" // Added for JSX type
+import type { Event, EventSeries } from "@/lib/api"
+import { motion, AnimatePresence } from "framer-motion"
+import type { JSX } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 
 const CATEGORIES = ["WORKSHOP", "CONFERENCE", "MEETUP", "SOCIAL", "SPORTS", "OTHER"] as const
 
@@ -43,95 +64,65 @@ interface Manager {
   role: string
 }
 
-// Enhanced EventMetaCard component
-function EventMetaCard({
+function EventInfoCard({
   icon: Icon,
   label,
   value,
-  color = "blue",
-  className = "",
+  isEditing = false,
+  editComponent,
 }: {
   icon: any
   label: string
   value: React.ReactNode
-  color?: "green" | "blue" | "purple" | "orange" | "gray" | "red"
-  className?: string
+  isEditing?: boolean
+  editComponent?: React.ReactNode
 }) {
-  const colorClasses = {
-    green: "from-emerald-500/20 to-emerald-600/10 border-emerald-200/50 text-emerald-700",
-    blue: "from-blue-500/20 to-blue-600/10 border-blue-200/50 text-blue-700",
-    purple: "from-purple-500/20 to-purple-600/10 border-purple-200/50 text-purple-700",
-    orange: "from-orange-500/20 to-orange-600/10 border-orange-200/50 text-orange-700",
-    gray: "from-gray-500/20 to-gray-600/10 border-gray-200/50 text-gray-700",
-    red: "from-red-500/20 to-red-600/10 border-red-200/50 text-red-700",
-  }
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-      className={`bg-gradient-to-br ${colorClasses[color]} backdrop-blur-sm rounded-xl p-4 border shadow-sm transition-all duration-200 hover:shadow-md ${className}`}
-    >
-      <div className="flex items-center space-x-3">
-        <div className="p-2 rounded-lg bg-white/70 shadow-sm">
-          <Icon className="w-4 h-4" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium opacity-70 uppercase tracking-wide mb-1">{label}</p>
-          <div className="text-sm font-semibold">
-            {typeof value === "string" ? <p className="truncate">{value}</p> : value}
+    <Card className="h-full">
+      <CardContent className="p-4">
+        <div className="flex items-start space-x-3">
+          <div className="p-2 rounded-lg bg-muted">
+            <Icon className="w-4 h-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">{label}</p>
+            {isEditing && editComponent ? editComponent : <div className="text-sm font-medium">{value}</div>}
           </div>
         </div>
-      </div>
-    </motion.div>
+      </CardContent>
+    </Card>
   )
 }
 
-// Enhanced ManagerCard component
 function ManagerCard({ manager }: { manager: Manager }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-      className="group flex items-center space-x-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-white/40 shadow-sm hover:shadow-md transition-all duration-200 hover:bg-white/90"
-    >
-      <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 shadow-sm">
-        {manager.avatarUrl ? (
-          <img
-            src={manager.avatarUrl || "/placeholder.svg"}
-            alt={manager.name}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <User2 className="w-6 h-6 text-gray-400" />
+    <Card className="transition-all hover:shadow-md">
+      <CardContent className="p-4">
+        <div className="flex items-center space-x-3">
+          <Avatar className="h-12 w-12">
+            <AvatarImage src={manager.avatarUrl || "/placeholder.svg"} alt={manager.name} />
+            <AvatarFallback>
+              <User2 className="h-6 w-6" />
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <p className="font-medium text-sm truncate">{manager.name}</p>
+            <p className="text-xs text-muted-foreground truncate">{manager.email}</p>
+            {manager.department && (
+              <p className="text-xs text-muted-foreground truncate mt-1">
+                {manager.job} • {manager.department}
+              </p>
+            )}
           </div>
-        )}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-gray-900 truncate">{manager.name}</p>
-        <p className="text-xs text-gray-600 truncate">{manager.email}</p>
-        {manager.department && (
-          <p className="text-xs text-gray-400 truncate mt-1">
-            {manager.job} • {manager.department}
-          </p>
-        )}
-      </div>
-      <div className="flex-shrink-0">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
-          {" "}
-          {/* Changed to blue */}
-          {manager.role}
-        </span>
-      </div>
-    </motion.div>
+          <Badge variant="secondary" className="text-xs">
+            {manager.role}
+          </Badge>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
-// Actions Dropdown Component
 function ActionsDropdown({
   onEdit,
   onPostpone,
@@ -150,9 +141,9 @@ function ActionsDropdown({
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
-        className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/80 hover:bg-white/90 backdrop-blur-sm border border-white/40 shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="theme-adaptive-button theme-transition w-10 h-10 rounded-lg hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed theme-focus"
       >
-        <MoreVertical className="w-4 h-4 text-gray-600" />
+        <MoreVertical className="w-4 h-4 mx-auto" />
       </button>
 
       <AnimatePresence>
@@ -170,7 +161,7 @@ function ActionsDropdown({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 top-12 z-20 w-48 bg-white/95 backdrop-blur-md rounded-xl border border-white/40 shadow-xl overflow-hidden"
+              className="absolute right-0 top-12 z-20 w-48 theme-adaptive-popover rounded-xl overflow-hidden"
             >
               <div className="py-2">
                 <button
@@ -178,7 +169,7 @@ function ActionsDropdown({
                     onEdit()
                     setIsOpen(false)
                   }}
-                  className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-blue-50/80 transition-colors duration-150"
+                  className="flex items-center w-full px-4 py-3 text-sm hover:theme-bg-accent theme-transition"
                 >
                   <Edit3 className="w-4 h-4 mr-3 text-blue-600" />
                   Edit Event
@@ -188,18 +179,18 @@ function ActionsDropdown({
                     onPostpone()
                     setIsOpen(false)
                   }}
-                  className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-orange-50/80 transition-colors duration-150"
+                  className="flex items-center w-full px-4 py-3 text-sm hover:theme-bg-accent theme-transition"
                 >
                   <CalendarX className="w-4 h-4 mr-3 text-orange-600" />
                   Postpone Event
                 </button>
-                <div className="border-t border-gray-200/50 my-1" />
+                <div className="theme-border my-1" />
                 <button
                   onClick={() => {
                     onDelete()
                     setIsOpen(false)
                   }}
-                  className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50/80 transition-colors duration-150"
+                  className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 theme-transition"
                 >
                   <Trash2 className="w-4 h-4 mr-3" />
                   Delete Event
@@ -213,7 +204,6 @@ function ActionsDropdown({
   )
 }
 
-// Confirmation Modal Component
 function ConfirmationModal({
   isOpen,
   onClose,
@@ -234,11 +224,11 @@ function ConfirmationModal({
   if (!isOpen) return null
 
   const Icon = type === "danger" ? AlertTriangle : CheckCircle
-  const iconColor = type === "danger" ? "text-red-600" : "text-blue-600"
-  const buttonColor = type === "danger" ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"
+  const iconColor = type === "danger" ? "text-red-600" : "theme-text-primary"
+  const buttonColor = type === "danger" ? "bg-red-600 hover:bg-red-700" : "bg-primary hover:opacity-90"
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -251,27 +241,27 @@ function ConfirmationModal({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.2 }}
-        className="relative bg-white/95 backdrop-blur-md rounded-2xl border border-white/40 shadow-2xl p-6 w-full max-w-md mx-4"
+        className="relative theme-adaptive-dialog rounded-2xl p-8 w-full max-w-md"
       >
-        <div className="flex items-center space-x-3 mb-4">
-          <div className={`p-2 rounded-full ${type === "danger" ? "bg-red-100" : "bg-blue-100"}`}>
+        <div className="flex items-center space-x-4 mb-6">
+          <div className={`p-3 rounded-full ${type === "danger" ? "bg-red-100" : "theme-bg-accent"}`}>
             <Icon className={`w-6 h-6 ${iconColor}`} />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+          <h3 className="text-xl font-semibold">{title}</h3>
         </div>
-        <div className="text-gray-600 mb-6 leading-relaxed">{message}</div>
-        <div className="flex space-x-3">
+        <div className="theme-text-muted mb-8 leading-relaxed">{message}</div>
+        <div className="flex space-x-4">
           <button
             onClick={onClose}
             disabled={isLoading}
-            className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-150 disabled:opacity-50"
+            className="flex-1 px-6 py-3 text-sm font-medium theme-bg-muted hover:theme-bg-accent rounded-xl theme-transition disabled:opacity-50 theme-focus"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className={`flex-1 px-4 py-2.5 text-sm font-medium text-white ${buttonColor} rounded-lg transition-colors duration-150 disabled:opacity-50 flex items-center justify-center`}
+            className={`flex-1 px-6 py-3 text-sm font-medium text-white ${buttonColor} rounded-xl theme-transition disabled:opacity-50 flex items-center justify-center theme-focus`}
           >
             {isLoading ? (
               <>
@@ -300,7 +290,6 @@ function ConfirmationModal({
   )
 }
 
-// Main Component
 export function OverviewTab({
   event,
   setEvent,
@@ -311,6 +300,11 @@ export function OverviewTab({
   const [isEditing, setIsEditing] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [eventSeries, setEventSeries] = useState<EventSeries[]>([])
+  const [currentEventSeries, setCurrentEventSeries] = useState<EventSeries | null>(null)
+  const [isLoadingStatus, setIsLoadingStatus] = useState(false)
+  const [isLoadingSeries, setIsLoadingSeries] = useState(false)
+  const [lastStatusCheck, setLastStatusCheck] = useState<Date | null>(null)
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean
     type: "delete" | "postpone" | null
@@ -327,7 +321,99 @@ export function OverviewTab({
     category: event.category,
     status: event.status,
     imageUrl: event.imageUrl,
+    EventSeriesId: event.EventSeriesId || "",
   })
+
+  const fetchEventStatus = useCallback(async () => {
+    try {
+      setIsLoadingStatus(true)
+      console.log("[v0] Fetching event status for event:", event.id)
+
+      const currentEvent = await apiService.getEvent(event.id)
+      console.log("[v0] Current event status:", currentEvent.status, "Previous:", event.status)
+
+      if (currentEvent.status !== event.status) {
+        console.log("[v0] Status changed, updating state")
+        setEvent((prev) => ({ ...prev, status: currentEvent.status }))
+        setEditForm((prev) => ({ ...prev, status: currentEvent.status }))
+
+        toast({
+          title: "Status Updated",
+          description: `Event status changed to ${currentEvent.status}`,
+        })
+      }
+
+      setLastStatusCheck(new Date())
+    } catch (error: any) {
+      console.error("[v0] Error fetching event status:", error)
+      toast({
+        title: "Warning",
+        description: "Could not fetch latest event status",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoadingStatus(false)
+    }
+  }, [event.id, event.status, setEvent, toast])
+
+  const fetchEventSeries = useCallback(async () => {
+    try {
+      setIsLoadingSeries(true)
+      console.log("[v0] Fetching event series data")
+
+      const series = await apiService.getEventSeries()
+      setEventSeries(series)
+      console.log("[v0] Loaded", series.length, "event series")
+
+      if (event.EventSeriesId) {
+        console.log("[v0] Fetching current event series:", event.EventSeriesId)
+        const currentSeries = await apiService.getEventSeriesById(event.EventSeriesId)
+        setCurrentEventSeries(currentSeries)
+        console.log("[v0] Current event series:", currentSeries.name)
+      } else {
+        setCurrentEventSeries(null)
+      }
+    } catch (error: any) {
+      console.error("[v0] Error fetching event series:", error)
+      toast({
+        title: "Warning",
+        description: "Could not load event series data",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoadingSeries(false)
+    }
+  }, [event.EventSeriesId, toast])
+
+  useEffect(() => {
+    console.log("[v0] Component mounted, initializing data fetch")
+
+    // Fetch event series data
+    fetchEventSeries()
+
+    // Fetch current event status
+    fetchEventStatus()
+
+    // Set up periodic status checking for real-time updates
+    const statusInterval = setInterval(() => {
+      if (!isEditing && !isUploading) {
+        console.log("[v0] Periodic status check")
+        fetchEventStatus()
+      }
+    }, 30000) // Check every 30 seconds
+
+    return () => {
+      console.log("[v0] Cleaning up status interval")
+      clearInterval(statusInterval)
+    }
+  }, []) // Removed dependencies to prevent unnecessary re-fetches
+
+  useEffect(() => {
+    if (event.EventSeriesId && event.EventSeriesId !== currentEventSeries?.id) {
+      console.log("[v0] Event series changed, refetching series data")
+      fetchEventSeries()
+    }
+  }, [event.EventSeriesId, currentEventSeries?.id, fetchEventSeries])
 
   const handleFormChange = useCallback((field: keyof typeof editForm, value: any) => {
     setEditForm((prev) => ({ ...prev, [field]: value }))
@@ -340,7 +426,9 @@ export function OverviewTab({
   const handleSave = useCallback(async () => {
     try {
       setIsUploading(true)
-      const updatedEvent = await apiService.updateEvent(event.id, {
+      console.log("[v0] Saving event changes")
+
+      const updateData = {
         title: editForm.title,
         description: editForm.description,
         date: editForm.date,
@@ -349,16 +437,36 @@ export function OverviewTab({
         category: editForm.category,
         status: editForm.status,
         imageUrl: editForm.imageUrl,
-      })
+        EventSeriesId: editForm.EventSeriesId || undefined,
+      }
+
+      const updatedEvent = await apiService.updateEvent(event.id, updateData)
+      console.log("[v0] Event updated successfully")
+
+      if (editForm.EventSeriesId !== event.EventSeriesId) {
+        if (editForm.EventSeriesId) {
+          console.log("[v0] Fetching new event series")
+          const newSeries = await apiService.getEventSeriesById(editForm.EventSeriesId)
+          setCurrentEventSeries(newSeries)
+        } else {
+          console.log("[v0] Clearing event series")
+          setCurrentEventSeries(null)
+        }
+      }
+
       setEvent({ ...event, ...updatedEvent, updatedAt: new Date().toISOString() })
       setIsEditing(false)
+
+      setTimeout(() => fetchEventStatus(), 1000)
+
       toast({ title: "Success", description: "Event updated successfully" })
     } catch (error: any) {
+      console.error("[v0] Error saving event:", error)
       toast({ title: "Error", description: error.message || "Failed to update event", variant: "destructive" })
     } finally {
       setIsUploading(false)
     }
-  }, [editForm, event, setEvent, toast])
+  }, [editForm, event, setEvent, toast, fetchEventStatus])
 
   const handleCancel = useCallback(() => {
     setEditForm({
@@ -370,46 +478,93 @@ export function OverviewTab({
       category: event.category,
       status: event.status,
       imageUrl: event.imageUrl,
+      EventSeriesId: event.EventSeriesId || "",
     })
     setIsEditing(false)
   }, [event])
+
+  const normalizedStatus = (isEditing ? editForm.status : event.status).toUpperCase() as
+    | "PUBLISHED"
+    | "PENDING"
+    | "CANCELLED"
+    | "REJECTED"
+    | "DONE"
+    | "DRAFT"
+
+  const getStatusVariant = (status: string) => {
+    switch (status.toUpperCase()) {
+      case "PUBLISHED":
+        return "default"
+      case "PENDING":
+        return "secondary"
+      case "CANCELLED":
+        return "destructive"
+      case "REJECTED":
+        return "destructive"
+      case "DONE":
+        return "default"
+      case "DRAFT":
+        return "outline"
+      default:
+        return "secondary"
+    }
+  }
+
+  const getStatusIcon = (status: string) => {
+    switch (status.toUpperCase()) {
+      case "PUBLISHED":
+        return "✅ "
+      case "PENDING":
+        return "⏳ "
+      case "CANCELLED":
+        return "❌ "
+      case "REJECTED":
+        return "🚫 "
+      case "DONE":
+        return "🎉 "
+      case "DRAFT":
+        return "📝 "
+      default:
+        return ""
+    }
+  }
+
+  const formatDateTime = (dateString: string) => {
+    return new Date(dateString).toLocaleString()
+  }
 
   const handleImageChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
       if (!file) return
+
+      if (!file.type.startsWith("image/")) {
+        toast({ title: "Error", description: "Only image files are allowed", variant: "destructive" })
+        return
+      }
+      if (file.size > 30 * 1024 * 1024) {
+        toast({ title: "Error", description: "File size exceeds 30MB limit", variant: "destructive" })
+        return
+      }
+
       setIsUploading(true)
       try {
-        const formData = new FormData()
-        formData.append("file", file)
-        const response = await apiService.uploadMedia(formData)
-        setEditForm((prev) => ({ ...prev, imageUrl: response.mediaUrl }))
+        const response = await apiService.uploadEventImage(event.id, file)
+        setEditForm((prev) => ({ ...prev, imageUrl: response.imageUrl }))
+        setEvent((prev) => ({ ...prev, imageUrl: response.imageUrl }))
         toast({ title: "Success", description: "Image uploaded successfully" })
       } catch (error: any) {
-        toast({ title: "Error", description: error.message || "Failed to upload image", variant: "destructive" })
+        toast({
+          title: "Error",
+          description: error.message || "Failed to upload image",
+          variant: "destructive",
+        })
       } finally {
         setIsUploading(false)
       }
     },
-    [toast],
+    [event.id, toast, setEvent],
   )
-
-  const triggerFileInput = useCallback(() => {
-    fileInputRef.current?.click()
-  }, [])
-
-  const handleEdit = useCallback(() => {
-    setIsEditing(true)
-  }, [])
-
-  const handlePostpone = useCallback(() => {
-    setConfirmModal({ isOpen: true, type: "postpone", isLoading: false })
-    setPostponeForm({ date: event.date, time: event.time })
-  }, [event])
-
-  const handleDelete = useCallback(() => {
-    setConfirmModal({ isOpen: true, type: "delete", isLoading: false })
-  }, [])
 
   const confirmAction = useCallback(async () => {
     if (!confirmModal.type) return
@@ -449,390 +604,442 @@ export function OverviewTab({
     }
   }, [confirmModal.type, event.id, postponeForm, router, setEvent, toast])
 
-  const normalizedStatus = (isEditing ? editForm.status : event.status).toUpperCase() as
-    | "PUBLISHED"
-    | "PENDING"
-    | "CANCELLED"
-
-  const statusConfig = {
-    PUBLISHED: {
-      variant: "default" as const,
-      bgColor: "from-emerald-500/15 to-emerald-600/5 border-emerald-200/60",
-      badge: "bg-emerald-100 text-emerald-800 border-emerald-200",
-    },
-    PENDING: {
-      variant: "secondary" as const,
-      bgColor: "from-amber-500/15 to-amber-600/5 border-amber-200/60",
-      badge: "bg-amber-100 text-amber-800 border-amber-200",
-    },
-    CANCELLED: {
-      variant: "destructive" as const,
-      bgColor: "from-red-500/15 to-red-600/5 border-red-200/60",
-      badge: "bg-red-100 text-red-800 border-red-200",
-    },
-  }
-
-  const currentStatusConfig = statusConfig[normalizedStatus] || statusConfig.PUBLISHED
-
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString()
-  }
-
   return (
-    <div className="space-y-8">
-      {/* Main Event Card */}
-      <div
-        className={`relative overflow-hidden border-2 bg-gradient-to-br ${currentStatusConfig.bgColor} shadow-2xl rounded-3xl`}
-      >
-        <div className="absolute inset-0 bg-grid-white/[0.05] bg-grid-16 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]" />
-        <div className="relative p-8 lg:p-12">
-          {/* Header Section */}
-          <div className="flex flex-col xl:flex-row gap-8 mb-10">
-            {/* Image Section */}
-            <div className="w-full xl:w-2/5">
-              <div className="relative rounded-2xl overflow-hidden border-2 border-white/40 bg-white/20 aspect-video shadow-xl group">
-                {editForm.imageUrl ? (
-                  <img
-                    src={editForm.imageUrl || "/placeholder.svg"}
-                    alt={event.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
+    <div className="space-y-6 max-w-7xl mx-auto p-6">
+      <Card>
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <div className="space-y-4 flex-1">
+              <div className="flex items-center gap-3 flex-wrap">
+                {isEditing ? (
+                  <Select value={editForm.status} onValueChange={(value) => handleFormChange("status", value)}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">📝 Draft</SelectItem>
+                      <SelectItem value="pending">⏳ Pending</SelectItem>
+                      <SelectItem value="published">✅ Published</SelectItem>
+                      <SelectItem value="done">🎉 Done</SelectItem>
+                      <SelectItem value="cancelled">❌ Cancelled</SelectItem>
+                      <SelectItem value="rejected">🚫 Rejected</SelectItem>
+                    </SelectContent>
+                  </Select>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300">
-                    <ImageIcon className="w-20 h-20 text-gray-400" />
-                  </div>
-                )}
-                {isEditing && (
-                  <>
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handleImageChange}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                    <button
-                      onClick={triggerFileInput}
-                      disabled={isUploading}
-                      className="absolute inset-0 flex items-center justify-center bg-black/70 opacity-0 hover:opacity-100 transition-all duration-300 backdrop-blur-sm"
-                    >
-                      {isUploading ? (
-                        <div className="text-white flex items-center">
-                          <svg
-                            className="animate-spin -ml-1 mr-3 h-6 w-6 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          Uploading...
-                        </div>
-                      ) : (
-                        <div className="text-white flex items-center text-lg font-medium">
-                          <Edit3 className="w-5 h-5 mr-3" />
-                          {editForm.imageUrl ? "Change Image" : "Add Image"}
-                        </div>
-                      )}
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-            {/* Content Section */}
-            <div className="flex-1">
-              <div className="flex items-start justify-between mb-8">
-                <div className="space-y-4 flex-1">
-                  <div className="flex items-center gap-4 flex-wrap">
-                    {isEditing ? (
-                      <select
-                        value={editForm.status}
-                        onChange={(e) => handleFormChange("status", e.target.value)}
-                        className={`px-4 py-2 rounded-xl font-medium text-sm border shadow-sm bg-white/90 backdrop-blur-sm transition-all duration-200 ${currentStatusConfig.badge} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                      >
-                        <option value="published">✅ Published</option>
-                        <option value="pending">⏳ Pending</option>
-                        <option value="cancelled">❌ Cancelled</option>
-                      </select>
-                    ) : (
-                      <span
-                        className={`inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold border shadow-sm ${currentStatusConfig.badge}`}
-                      >
-                        {normalizedStatus === "PUBLISHED" && "✅"}
-                        {normalizedStatus === "PENDING" && "⏳"}
-                        {normalizedStatus === "CANCELLED" && "❌"}
-                        <span className="ml-2">{event.status.charAt(0).toUpperCase() + event.status.slice(1)}</span>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={getStatusVariant(event.status)} className="text-sm px-3 py-1">
+                      {getStatusIcon(event.status)}
+                      {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                    </Badge>
+                    {isLoadingStatus && (
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                        <span>Checking status...</span>
+                      </div>
+                    )}
+                    {lastStatusCheck && !isLoadingStatus && (
+                      <span className="text-xs text-muted-foreground">
+                        Last checked: {lastStatusCheck.toLocaleTimeString()}
                       </span>
                     )}
-                    {!isEditing && (
-                      <ActionsDropdown
-                        onEdit={handleEdit}
-                        onPostpone={handlePostpone}
-                        onDelete={handleDelete}
-                        disabled={isUploading}
-                      />
-                    )}
                   </div>
-                  {isEditing ? (
-                    <div className="space-y-4">
-                      <input
-                        value={editForm.title}
-                        onChange={(e) => handleFormChange("title", e.target.value)}
-                        className="w-full text-3xl lg:text-4xl font-bold bg-white/90 backdrop-blur-sm border-2 border-gray-200 rounded-xl px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Event Title"
-                      />
-                      <div className="flex gap-3">
-                        <button
-                          onClick={handleSave}
-                          className="flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
-                          disabled={isUploading}
-                        >
-                          {isUploading ? (
-                            <>
-                              <svg
-                                className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <circle
-                                  className="opacity-25"
-                                  cx="12"
-                                  cy="12"
-                                  r="10"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                ></circle>
-                                <path
-                                  className="opacity-75"
-                                  fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
-                              </svg>
-                              Saving...
-                            </>
-                          ) : (
-                            <>
-                              <Save className="w-5 h-5 mr-2" />
-                              Save Changes
-                            </>
-                          )}
-                        </button>
-                        <button
-                          onClick={handleCancel}
-                          disabled={isUploading}
-                          className="flex items-center px-6 py-3 bg-white/80 hover:bg-white/90 text-gray-700 font-medium rounded-xl shadow-lg hover:shadow-xl border border-white/50 backdrop-blur-sm transition-all duration-200 disabled:opacity-50"
-                        >
-                          <X className="w-5 h-5 mr-2" />
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 drop-shadow-sm leading-tight">
-                      {event.title}
-                    </h1>
-                  )}
-                </div>
-              </div>
-              {/* Event Meta Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
-                <EventMetaCard
-                  icon={Calendar}
-                  label="Date"
-                  value={
-                    isEditing ? (
-                      <input
-                        type="date"
-                        value={editForm.date}
-                        onChange={(e) => handleFormChange("date", e.target.value)}
-                        className="w-full mt-2 px-3 py-2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                      />
-                    ) : (
-                      new Date(event.date).toLocaleDateString("en-US", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })
-                    )
-                  }
-                  color="green"
-                />
-                <EventMetaCard
-                  icon={Clock}
-                  label="Time"
-                  value={
-                    isEditing ? (
-                      <input
-                        type="time"
-                        value={editForm.time}
-                        onChange={(e) => handleFormChange("time", e.target.value)}
-                        className="w-full mt-2 px-3 py-2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                      />
-                    ) : (
-                      new Date(`2000-01-01T${event.time}`).toLocaleTimeString("en-US", {
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                      })
-                    )
-                  }
-                  color="blue"
-                />
-                <EventMetaCard
-                  icon={MapPin}
-                  label="Location"
-                  value={
-                    isEditing ? (
-                      <input
-                        value={editForm.location}
-                        onChange={(e) => handleFormChange("location", e.target.value)}
-                        className="w-full mt-2 px-3 py-2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Event Location"
-                      />
-                    ) : (
-                      event.location
-                    )
-                  }
-                  color="purple"
-                />
-                <EventMetaCard
-                  icon={Tag}
-                  label="Category"
-                  value={
-                    isEditing ? (
-                      <select
-                        value={editForm.category}
-                        onChange={(e) => handleFormChange("category", e.target.value as EventCategory)}
-                        className="w-full mt-2 px-3 py-2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                      >
-                        {CATEGORIES.map((category) => (
-                          <option key={category} value={category}>
-                            {t(`events.categories.${category.toLowerCase()}`)}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <span className="capitalize">{t(`events.categories.${event.category.toLowerCase()}`)}</span>
-                    )
-                  }
-                  color="orange"
-                />
-                <EventMetaCard icon={Info} label="Created" value={formatDateTime(event.createdAt)} color="gray" />
-                {event.updatedAt && (
-                  <EventMetaCard
-                    icon={Info}
-                    label="Last Updated"
-                    value={formatDateTime(event.updatedAt)}
-                    color="gray"
-                  />
+                )}
+                <Badge variant="outline" className="text-sm">
+                  {t(`events.categories.${event.category.toLowerCase()}`)}
+                </Badge>
+                {currentEventSeries && (
+                  <Badge variant="secondary" className="text-sm flex items-center gap-1">
+                    <Link className="w-3 h-3" />
+                    {currentEventSeries.name}
+                  </Badge>
+                )}
+                {isLoadingSeries && (
+                  <Badge variant="outline" className="text-sm flex items-center gap-1">
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-current"></div>
+                    Loading series...
+                  </Badge>
                 )}
               </div>
+
+              {isEditing ? (
+                <div className="space-y-4">
+                  <Input
+                    value={editForm.title}
+                    onChange={(e) => handleFormChange("title", e.target.value)}
+                    className="text-2xl font-bold border-0 px-0 focus-visible:ring-0"
+                    placeholder="Event Title"
+                  />
+                  <div className="flex gap-3">
+                    <Button onClick={handleSave} disabled={isUploading} className="flex items-center gap-2">
+                      {isUploading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4" />
+                          Save Changes
+                        </>
+                      )}
+                    </Button>
+                    <Button variant="outline" onClick={handleCancel} disabled={isUploading}>
+                      <X className="w-4 h-4 mr-2" />
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <CardTitle className="text-3xl font-bold text-balance leading-tight">{event.title}</CardTitle>
+              )}
             </div>
+
+            {!isEditing && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" disabled={isUploading}>
+                    <MoreVertical className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => setIsEditing(true)}>
+                    <Edit3 className="w-4 h-4 mr-3 text-blue-600" />
+                    Edit Event
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setConfirmModal({ isOpen: true, type: "postpone", isLoading: false })}
+                  >
+                    <CalendarX className="w-4 h-4 mr-3 text-orange-600" />
+                    Postpone Event
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => setConfirmModal({ isOpen: true, type: "delete", isLoading: false })}
+                    className="text-destructive"
+                  >
+                    <Trash2 className="w-4 h-4 mr-3" />
+                    Delete Event
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
-          {/* Description Section */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 mb-8 shadow-lg border border-white/40">
-            <h3 className="text-xl font-bold mb-6 text-gray-800 flex items-center">
-              {" "}
-              {/* Stronger text color */}
-              <Edit3 className="w-6 h-6 mr-3 text-blue-600" />
-              Description
-            </h3>
-            {isEditing ? (
-              <textarea
-                value={editForm.description}
-                onChange={(e) => handleFormChange("description", e.target.value)}
-                className="w-full min-h-[200px] bg-white/90 backdrop-blur-sm border-2 border-gray-200 rounded-xl p-4 resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 leading-relaxed"
-                placeholder="Provide a detailed description of your event..."
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          <div className="relative rounded-lg overflow-hidden border aspect-video max-w-2xl">
+            {editForm.imageUrl ? (
+              <img
+                src={editForm.imageUrl || "/placeholder.svg"}
+                alt={event.title}
+                className="w-full h-full object-cover"
               />
             ) : (
-              <div className="text-gray-700 leading-relaxed">
-                {" "}
-                {/* Stronger text color */}
-                {event.description ? (
-                  <p className="whitespace-pre-line text-gray-700 leading-relaxed">{event.description}</p>
-                ) : (
-                  <p className="italic text-gray-400">No description provided</p>
-                )}
+              <div className="w-full h-full flex items-center justify-center bg-muted">
+                <ImageIcon className="w-16 h-16 text-muted-foreground" />
               </div>
             )}
+            {isEditing && (
+              <>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 transition-opacity backdrop-blur-sm"
+                  variant="ghost"
+                >
+                  {isUploading ? (
+                    <div className="text-white flex items-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Uploading...
+                    </div>
+                  ) : (
+                    <div className="text-white flex items-center">
+                      <Edit3 className="w-5 h-5 mr-2" />
+                      {editForm.imageUrl ? "Change Image" : "Add Image"}
+                    </div>
+                  )}
+                </Button>
+              </>
+            )}
           </div>
-          {/* Organizers Section */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/40">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-bold text-gray-800 flex items-center">
-                {" "}
-                {/* Stronger text color */}
-                <Users className="w-6 h-6 mr-3 text-purple-600" />
-                Event Organizers
-              </h3>
-              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-purple-100 text-purple-800 border border-purple-200">
-                {event.managers.length} {event.managers.length === 1 ? "Manager" : "Managers"}
-              </span>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <EventInfoCard
+              icon={Calendar}
+              label="Date"
+              value={new Date(event.date).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+              isEditing={isEditing}
+              editComponent={
+                <Input
+                  type="date"
+                  value={editForm.date}
+                  onChange={(e) => handleFormChange("date", e.target.value)}
+                  className="mt-2"
+                />
+              }
+            />
+            <EventInfoCard
+              icon={Clock}
+              label="Time"
+              value={new Date(`2000-01-01T${event.time}`).toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              })}
+              isEditing={isEditing}
+              editComponent={
+                <Input
+                  type="time"
+                  value={editForm.time}
+                  onChange={(e) => handleFormChange("time", e.target.value)}
+                  className="mt-2"
+                />
+              }
+            />
+            <EventInfoCard
+              icon={MapPin}
+              label="Location"
+              value={event.location}
+              isEditing={isEditing}
+              editComponent={
+                <Input
+                  value={editForm.location}
+                  onChange={(e) => handleFormChange("location", e.target.value)}
+                  placeholder="Event Location"
+                  className="mt-2"
+                />
+              }
+            />
+            <EventInfoCard
+              icon={Tag}
+              label="Category"
+              value={<span className="capitalize">{t(`events.categories.${event.category.toLowerCase()}`)}</span>}
+              isEditing={isEditing}
+              editComponent={
+                <Select value={editForm.category} onValueChange={(value) => handleFormChange("category", value)}>
+                  <SelectTrigger className="mt-2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {t(`events.categories.${category.toLowerCase()}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              }
+            />
+            {isEditing && (
+              <EventInfoCard
+                icon={Link}
+                label="Event Series"
+                value={currentEventSeries?.name || "No series"}
+                isEditing={isEditing}
+                editComponent={
+                  <Select
+                    value={editForm.EventSeriesId || "none"}
+                    onValueChange={(value) => handleFormChange("EventSeriesId", value === "none" ? "" : value)}
+                  >
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="Select event series" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No series</SelectItem>
+                      {eventSeries.map((series) => (
+                        <SelectItem key={series.id} value={series.id}>
+                          {series.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                }
+              />
+            )}
+            <EventInfoCard icon={Info} label="Created" value={formatDateTime(event.createdAt)} />
+            {event.updatedAt && (
+              <EventInfoCard icon={Info} label="Last Updated" value={formatDateTime(event.updatedAt)} />
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Edit3 className="w-5 h-5" />
+              Description
+            </CardTitle>
+            <Badge variant="secondary">
+              {event.organizers?.length || 0} {(event.organizers?.length || 0) === 1 ? "Organizer" : "Organizers"}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {isEditing ? (
+            <Textarea
+              value={editForm.description}
+              onChange={(e) => handleFormChange("description", e.target.value)}
+              className="min-h-[150px] resize-none"
+              placeholder="Provide a detailed description of your event..."
+            />
+          ) : (
+            <div className="prose prose-sm max-w-none">
+              {event.description ? (
+                <p className="whitespace-pre-line leading-relaxed">{event.description}</p>
+              ) : (
+                <p className="text-muted-foreground italic">No description provided</p>
+              )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {event.managers.map((manager: Manager) => (
-                <ManagerCard key={manager.id} manager={manager} />
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <User2 className="w-5 h-5" />
+              Event Organizers
+            </CardTitle>
+            <Badge variant="secondary">
+              {event.organizers?.length || 0} {(event.organizers?.length || 0) === 1 ? "Organizer" : "Organizers"}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {event.organizers && event.organizers.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {event.organizers.map((organizer) => (
+                <ManagerCard
+                  key={organizer.id}
+                  manager={{
+                    id: organizer.id,
+                    name: organizer.username,
+                    email: organizer.email,
+                    avatarUrl: organizer.avatarUrl,
+                    department: organizer.department,
+                    job: organizer.job,
+                    role: organizer.role,
+                  }}
+                />
               ))}
             </div>
-            {event.managers.length === 0 && (
-              <div className="text-center py-12">
-                <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-400 italic text-lg">No organizers assigned</p>
+          ) : (
+            <div className="text-center py-12">
+              <User2 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">No organizers assigned</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {currentEventSeries && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Link className="w-5 h-5" />
+              Event Series Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold text-lg">{currentEventSeries.name}</h4>
+                {currentEventSeries.description && (
+                  <p className="text-muted-foreground mt-2 leading-relaxed">{currentEventSeries.description}</p>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-      {/* Confirmation Modal */}
-      <AnimatePresence>
-        {confirmModal.isOpen && (
-          <ConfirmationModal
-            isOpen={confirmModal.isOpen}
-            onClose={() => setConfirmModal({ isOpen: false, type: null, isLoading: false })}
-            onConfirm={confirmAction}
-            title={confirmModal.type === "delete" ? "Delete Event" : "Postpone Event"}
-            message={
-              confirmModal.type === "delete" ? (
-                "Are you sure you want to delete this event? This action cannot be undone and all related data will be permanently removed."
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <span>Created: {formatDateTime(currentEventSeries.createdAt)}</span>
+                {currentEventSeries.eventsCount && <span>• {currentEventSeries.eventsCount} events in series</span>}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <Dialog
+        open={confirmModal.isOpen}
+        onOpenChange={(open) => !open && setConfirmModal({ isOpen: false, type: null, isLoading: false })}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {confirmModal.type === "delete" ? (
+                <>
+                  <AlertTriangle className="w-5 h-5 text-destructive" />
+                  Delete Event
+                </>
               ) : (
                 <>
-                  <p className="mb-4">Please provide a new date and time to postpone the event:</p>
-                  <div className="space-y-4">
-                    <input
-                      type="date"
-                      value={postponeForm.date}
-                      onChange={(e) => handlePostponeFormChange("date", e.target.value)}
-                      className="w-full px-3 py-2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    <input
-                      type="time"
-                      value={postponeForm.time}
-                      onChange={(e) => handlePostponeFormChange("time", e.target.value)}
-                      className="w-full px-3 py-2 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
+                  <CheckCircle className="w-5 h-5" />
+                  Postpone Event
                 </>
-              )
-            }
-            type={confirmModal.type === "delete" ? "danger" : "default"}
-            isLoading={confirmModal.isLoading}
-          />
-        )}
-      </AnimatePresence>
+              )}
+            </DialogTitle>
+            <DialogDescription>
+              {confirmModal.type === "delete"
+                ? "Are you sure you want to delete this event? This action cannot be undone and all related data will be permanently removed."
+                : "Please provide a new date and time to postpone the event:"}
+            </DialogDescription>
+          </DialogHeader>
+
+          {confirmModal.type === "postpone" && (
+            <div className="space-y-4 py-4">
+              <Input
+                type="date"
+                value={postponeForm.date}
+                onChange={(e) => handlePostponeFormChange("date", e.target.value)}
+                placeholder="New date"
+              />
+              <Input
+                type="time"
+                value={postponeForm.time}
+                onChange={(e) => handlePostponeFormChange("time", e.target.value)}
+                placeholder="New time"
+              />
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setConfirmModal({ isOpen: false, type: null, isLoading: false })}
+              disabled={confirmModal.isLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant={confirmModal.type === "delete" ? "destructive" : "default"}
+              onClick={confirmAction}
+              disabled={confirmModal.isLoading}
+            >
+              {confirmModal.isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                  Processing...
+                </>
+              ) : (
+                "Confirm"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -1,7 +1,3 @@
-// English translations for the event management app
-
-import { partial } from "lodash";
-
 const en = {
   common: {
     loading: "Loading...",
@@ -48,19 +44,19 @@ const en = {
     manager: "manager",
     employee: "Employee",
     features: {
-        eventManagement: {
-          title: "Event Management",
-          description: "Organize and manage events seamlessly with powerful tools."
-        },
-        teamCollaboration: {
-          title: "Team Collaboration",
-          description: "Collaborate with your team to create memorable events."
-        },
-        successAnalytics: {
-          title: "Success Analytics",
-          description: "Track event success with detailed analytics and insights."
-        }
-      }
+      eventManagement: {
+        title: "Event Management",
+        description: "Organize and manage events seamlessly with powerful tools.",
+      },
+      teamCollaboration: {
+        title: "Team Collaboration",
+        description: "Collaborate with your team to create memorable events.",
+      },
+      successAnalytics: {
+        title: "Success Analytics",
+        description: "Track event success with detailed analytics and insights.",
+      },
+    },
   },
   navigation: {
     overview: "Overview",
@@ -79,14 +75,13 @@ const en = {
     profile: "Profile",
     settings: "Settings",
     draft: "Drafts",
-   
   },
-    createEventPage: {
+  createEventPage: {
     title: "Create an Event",
     subtitle: "Create an event effortlessly",
     tabs: {
       voice: "Voice Command",
-      manual: "Manual Entry"
+      manual: "Manual Entry",
     },
     voiceRecording: "Voice Recording",
     aiContent: "AI Generated Content",
@@ -115,7 +110,6 @@ const en = {
     publish: "Publish Event",
     saveDraft: "Save as Draft",
     draft: "Draft",
-
     preview: "Preview",
     tagsHelp: "Separate tags with commas (e.g., music, art, sports).",
     descriptionTooShort: "The description must be at least 10 characters long.",
@@ -123,6 +117,43 @@ const en = {
     budgetPlaceholder: "Enter the budget",
     budgetRequired: "Budget is required",
     required: "This field is required",
+    transcriptionError: "Error processing transcription",
+    imageTooLarge: "Image size exceeds limit",
+    createError: "Failed to create event",
+    highConfidence: "High confidence",
+    pageDescription: "Create engaging events with our intuitive form or voice commands",
+    detailedForms: "Detailed Forms",
+    detailedFormsDesc: "Complete forms with all necessary event information",
+    livePreview: "Live Preview",
+    livePreviewDesc: "See how your event will appear to participants",
+    mediaUpload: "Media Upload",
+    mediaUploadDesc: "Add images and media to make your event stand out",
+    eventManager: "Event Manager",
+    assignManager: "Assign Manager",
+    selectManagerPlaceholder: "Select a manager...",
+    searchManager: "Search managers...",
+    noManagerFound: "No managers found",
+    loadingManagers: "Loading managers...",
+    managerResponsibility: "The selected manager will be responsible for this event",
+    eventSeries: "Event Series",
+    noSeries: "No Series",
+    selectExisting: "Select Existing",
+    createNew: "Create New",
+    selectEventSeries: "Select Event Series",
+    loadingSeries: "Loading series...",
+    chooseSeriesPlaceholder: "Choose a series...",
+    newSeriesName: "New Series Name",
+    newSeriesPlaceholder: "Enter series name...",
+    newSeriesHelp: "Create a new series to group related events together",
+    managerLabel: "Manager",
+    seriesLabel: "Series",
+    eventPreviewAlt: "Event preview image",
+    dateNotSet: "Date not set",
+    locationNotSet: "Location not set",
+    at: "at",
+    maxParticipantsLabel: "max participants",
+    tagsLabel: "Tags",
+    saveAsDraft: "Save as Draft",
   },
   profile: {
     title: "My Profile",
@@ -166,16 +197,16 @@ const en = {
     avatarUpdated: "Profile picture updated",
     maxFileSize: "File size must not exceed 30MB",
     invalidFileType: "Unsupported file type. Use JPG, PNG or GIF",
-     avatarHelp: "Accepted formats: JPG, PNG, GIF, WebP – max 30MB.",
-      zoomLevel: "Zoom Level",
-      cropAvatar: "Crop Your Avatar",
-      nameMinLength: "Name must be at least 2 characters long",
-      selectAvatarFile: "Select avatar file",
-      hidePassword: "Hide password",
-      showPassword: "Show password",
-      passwordRequirements: "Password must be at least 8 characters with uppercase, lowercase, and number.",
-    },
-  
+    avatarHelp: "Accepted formats: JPG, PNG, GIF, WebP – max 30MB.",
+    zoomLevel: "Zoom Level",
+    cropAvatar: "Crop Your Avatar",
+    nameMinLength: "Name must be at least 2 characters long",
+    selectAvatarFile: "Select avatar file",
+    hidePassword: "Hide password",
+    showPassword: "Show password",
+    passwordRequirements: "Password must be at least 8 characters with uppercase, lowercase, and number.",
+  },
+
   events: {
     managementDashboard: "Event Management Dashboard",
     eventFeedback: "Event Feedback",
@@ -186,7 +217,7 @@ const en = {
       meetup: "Meetup",
       social: "Social",
       sports: "Sports",
-      other: "Other"
+      other: "Other",
     },
     noSearchResults: "Try changing your search",
     noRegisteredEvents: "You are not registered for any events yet",
@@ -232,14 +263,14 @@ const en = {
     all: "All",
     noEventsFound: "No events found",
 
-    resetSearch: "Reset search"
+    resetSearch: "Reset search",
   },
   registrations: {
     loading: "Loading your registrations",
     fetchingEvents: "We're fetching the events you've registered for...",
     noRegistrations: "No Registrations Yet",
     browseEvents: "Browse Events",
-    myRegistrations: "My Registrations"
+    myRegistrations: "My Registrations",
   },
   chat: {
     eventChat: "Event Chat",
@@ -266,7 +297,7 @@ const en = {
     searchUsers: "Search users...",
     noUsersFound: "No users found.",
     unassigned: "Unassigned",
-    noUserAssigned: "No user assigned"
+    noUserAssigned: "No user assigned",
   },
   forgotPassword: {
     title: "Forgot Password",
@@ -277,7 +308,7 @@ const en = {
     enterCode: "Enter verification code",
     verifyCode: "Verify Code",
     newPassword: "New Password",
-    confirmPassword: "Confirm Password"
+    confirmPassword: "Confirm Password",
   },
   voice: {
     startRecording: "Start Recording",
@@ -361,9 +392,8 @@ const en = {
     title: "Your All-in-One Event Platform at Teamwill",
     liveChatActive: "Live chat active",
     voiceCommands: "Voice commands available",
-    newVersion: "New version available!",
-    subtitle:
-      "Modern platform with real-time chat, voice command creation, and smart participant management.",
+
+    subtitle: "Modern platform with real-time chat, voice command creation, and smart participant management.",
     getStarted: "Get Started",
     accessDashboard: "Access Dashboard",
     signIn: "Sign In",
@@ -392,12 +422,10 @@ const en = {
       "TeamwillEvents has revolutionized how we organize corporate events. The interface is intuitive and the real-time chat features are fantastic.",
     testimonial1Author: "Marie Dubois",
     testimonial1Role: "Manager Director, TechCorp",
-    testimonial2:
-      "Creating events by voice command saves us precious time. A truly innovative solution!",
+    testimonial2: "Creating events by voice command saves us precious time. A truly innovative solution!",
     testimonial2Author: "Pierre Martin",
     testimonial2Role: "HR Manager, InnovateLab",
-    testimonial3:
-      "The team loves the ease of use. Registrations and participant management have never been easier.",
+    testimonial3: "The team loves the ease of use. Registrations and participant management have never been easier.",
     testimonial3Author: "Sophie Laurent",
     testimonial3Role: "Project Lead, CreativeStudio",
     faq: "Frequently Asked Questions",
@@ -405,14 +433,11 @@ const en = {
     faqAnswer1:
       "Log in to your account, click 'Create Event' and follow the steps. You can even use voice command for extra speed!",
     faqQuestion2: "Can I edit an event after publishing?",
-    faqAnswer2:
-      "Yes, you can edit all your event details at any time from your dashboard.",
+    faqAnswer2: "Yes, you can edit all your event details at any time from your dashboard.",
     faqQuestion3: "How does the real-time chat work?",
-    faqAnswer3:
-      "Each event has a dedicated chat where participants can interact. Messages are synced in real time.",
+    faqAnswer3: "Each event has a dedicated chat where participants can interact. Messages are synced in real time.",
     faqQuestion4: "Is there a limit to the number of participants?",
-    faqAnswer4:
-      "You set the maximum number of participants for each event according to your needs.",
+    faqAnswer4: "You set the maximum number of participants for each event according to your needs.",
     contactUs: "Contact Us",
     contactSubtitle: "A question? Our team is here to help",
     getInTouch: "Get in touch",
@@ -436,7 +461,7 @@ const en = {
     contactSupportBtn: "Contact Support",
     thankYou: "Thank you for your patience. We'll be back soon!",
   },
-    eventDetails: {
+  eventDetails: {
     actions: "Actions",
     share: "Share",
     save: "Save",
@@ -456,13 +481,13 @@ const en = {
     status: {
       ongoing: "Ongoing",
       upcoming: "Upcoming",
-      ended: "Ended"
+      ended: "Ended",
     },
     registerButton: "Register for this event",
     registeredButton: "Already registered",
     registeringButton: "Registering...",
     cancelButton: "Cancel registration",
-    cancellingButton: "Cancelling..."
+    cancellingButton: "Cancelling...",
   },
   eventCard: {
     cancelButton: "Cancel",
@@ -492,113 +517,113 @@ const en = {
     errorMarkingAllRead: "Failed to mark all notifications as read",
   },
   statistics: {
-loading: "Loading comprehensive analytics...",
-error: {
-title: "Error loading analytics",
-subtitle: "Please try refreshing the page",
-retry: "Retry"
-},
-noData: "No event data available",
-title: "Comprehensive Event Analytics",
-subtitle: "Complete insights and performance metrics for {{eventTitle}}",
-badges: {
-unread: "{{count}} unread",
-status: "Status"
-},
-overview: {
-totalParticipants: "Total Participants",
-participantGrowth: "{{growth}}% vs series avg",
-taskCompletion: "Task Completion",
-tasksCompleted: "{{completed}}/{{total}} tasks",
-budgetStatus: "Budget Status",
-budgetUsed: "${{actual}} / ${{planned}}",
-notifications: "Notifications",
-notificationsUnread: "{{count}} unread",
-daysUntilEvent: "Days Until Event",
-daysRemaining: "days remaining",
-eventPassed: "event passed",
-capacityFill: "Capacity Fill",
-capacityUsed: "{{current}}/{{max}}"
-},
-tasks: {
-completedTasks: "Completed Tasks",
-inProgress: "In Progress",
-pendingTasks: "Pending Tasks",
-assignedUsers: "Assigned Users",
-statusDistribution: "Task Status Distribution",
-topContributors: "Top Contributors",
-noAssignments: "No task assignments yet",
-timeline: "Comprehensive Task Timeline",
-progress: "Progress",
-assigned: "{{count}} assigned",
-due: "Due {{date}}",
-created: "Created:",
-updated: "Updated:",
-assignedBy: "Assigned By:",
-event: "Event:",
-system: "System",
-status: {
-done: "Done",
-inProgress: "In Progress",
-accepted: "Accepted",
-rejected: "Rejected",
-pending: "Pending",
-todo: "To Do"
-},
-priority: {
-high: "High",
-medium: "Medium",
-low: "Low"
+    loading: "Loading comprehensive analytics...",
+    error: {
+      title: "Error loading analytics",
+      subtitle: "Please try refreshing the page",
+      retry: "Retry",
+    },
+    noData: "No event data available",
+    title: "Comprehensive Event Analytics",
+    subtitle: "Complete insights and performance metrics for {{eventTitle}}",
+    badges: {
+      unread: "{{count}} unread",
+      status: "Status",
+    },
+    overview: {
+      totalParticipants: "Total Participants",
+      participantGrowth: "{{growth}}% vs series avg",
+      taskCompletion: "Task Completion",
+      tasksCompleted: "{{completed}}/{{total}} tasks",
+      budgetStatus: "Budget Status",
+      budgetUsed: "${{actual}} / ${{planned}}",
+      notifications: "Notifications",
+      notificationsUnread: "{{count}} unread",
+      daysUntilEvent: "Days Until Event",
+      daysRemaining: "days remaining",
+      eventPassed: "event passed",
+      capacityFill: "Capacity Fill",
+      capacityUsed: "{{current}}/{{max}}",
+    },
+    tasks: {
+      completedTasks: "Completed Tasks",
+      inProgress: "In Progress",
+      pendingTasks: "Pending Tasks",
+      assignedUsers: "Assigned Users",
+      statusDistribution: "Task Status Distribution",
+      topContributors: "Top Contributors",
+      noAssignments: "No task assignments yet",
+      timeline: "Comprehensive Task Timeline",
+      progress: "Progress",
+      assigned: "{{count}} assigned",
+      due: "Due {{date}}",
+      created: "Created:",
+      updated: "Updated:",
+      assignedBy: "Assigned By:",
+      event: "Event:",
+      system: "System",
+      status: {
+        done: "Done",
+        inProgress: "In Progress",
+        accepted: "Accepted",
+        rejected: "Rejected",
+        pending: "Pending",
+        todo: "To Do",
+      },
+      priority: {
+        high: "High",
+        medium: "Medium",
+        low: "Low",
+      },
+    },
+    budget: {
+      title: "Comprehensive Budget Analysis",
+      planned: "Planned Budget",
+      actual: "Actual Spending",
+      remaining: "Remaining",
+      variance: "Variance",
+      over: "Over Budget",
+      under: "Under Budget",
+      onTrack: "On Track",
+      categories: "Budget Categories",
+      noCosts: "No cost items recorded yet",
+    },
+    participants: {
+      title: "Participant Analytics",
+      demographics: "Demographics",
+      roleDistribution: "Role Distribution",
+      jobDistribution: "Job Distribution",
+      engagement: "Engagement Metrics",
+      averageAge: "Average Age",
+      years: "years",
+      genderSplit: "Gender Split",
+      male: "Male",
+      female: "Female",
+      other: "Other",
+      notSpecified: "Not Specified",
+      noParticipants: "No participants registered yet",
+    },
+    communication: {
+      title: "Communication Analytics",
+      totalNotifications: "Total Notifications",
+      unread: "Unread",
+      readRate: "Read Rate",
+      recentNotifications: "Recent Notifications",
+      types: {
+        info: "Info",
+        warning: "Warning",
+        error: "Error",
+        success: "Success",
+      },
+    },
+    series: {
+      title: "Series Performance",
+      participationTrends: "Participation Trends",
+      averageParticipants: "Average Participants",
+      totalEvents: "Total Events",
+      seriesGrowth: "Series Growth",
+      noSeriesData: "No series data available",
+    },
+  },
 }
-},
-budget: {
-title: "Comprehensive Budget Analysis",
-planned: "Planned Budget",
-actual: "Actual Spending",
-remaining: "Remaining",
-variance: "Variance",
-over: "Over Budget",
-under: "Under Budget",
-onTrack: "On Track",
-categories: "Budget Categories",
-noCosts: "No cost items recorded yet"
-},
-participants: {
-title: "Participant Analytics",
-demographics: "Demographics",
-roleDistribution: "Role Distribution",
-jobDistribution: "Job Distribution",
-engagement: "Engagement Metrics",
-averageAge: "Average Age",
-years: "years",
-genderSplit: "Gender Split",
-male: "Male",
-female: "Female",
-other: "Other",
-notSpecified: "Not Specified",
-noParticipants: "No participants registered yet"
-},
-communication: {
-title: "Communication Analytics",
-totalNotifications: "Total Notifications",
-unread: "Unread",
-readRate: "Read Rate",
-recentNotifications: "Recent Notifications",
-types: {
-info: "Info",
-warning: "Warning",
-error: "Error",
-success: "Success"
-}
-},
-series: {
-title: "Series Performance",
-participationTrends: "Participation Trends",
-averageParticipants: "Average Participants",
-totalEvents: "Total Events",
-seriesGrowth: "Series Growth",
-noSeriesData: "No series data available"
-}
-}
-}
-export default en;
+export default en

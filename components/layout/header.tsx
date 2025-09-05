@@ -57,9 +57,9 @@ export function Header({ user, onLogout }: HeaderProps) {
           href={item.href}
           className={`${
             pathname === item.href
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground hover:text-foreground"
-          } ${mobile ? "block py-2" : "px-3 py-2"} text-sm font-medium transition-colors`}
+              ? "theme-text-primary border-b-2 border-[var(--primary)]"
+              : "theme-text-muted hover:theme-text-foreground"
+          } ${mobile ? "block py-2" : "px-3 py-2"} text-sm font-medium theme-transition`}
         >
           {item.name}
         </Link>
@@ -68,7 +68,7 @@ export function Header({ user, onLogout }: HeaderProps) {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full theme-border border-b theme-bg-card/95 backdrop-blur supports-[backdrop-filter]:theme-bg-card/60">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo + Nav */}
         <div className="flex items-center space-x-4">
@@ -80,7 +80,7 @@ export function Header({ user, onLogout }: HeaderProps) {
               height={36}
               style={{ objectFit: "contain" }}
             />
-            <span className="font-bold text-xl">TeamwillEvents</span>
+            <span className="font-bold text-xl theme-text-primary">TeamwillEvents</span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-1">
@@ -102,38 +102,41 @@ export function Header({ user, onLogout }: HeaderProps) {
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+              <Button variant="ghost" className="relative h-8 w-8 rounded-full theme-transition">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={user.avatarUrl || "/placeholder.svg"} alt={user.username} />
                   <AvatarFallback>{user?.username?.charAt(0).toUpperCase() ?? "?"}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuContent className="w-56 theme-adaptive-popover rounded-[--radius-lg]" align="end" forceMount>
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium">{user.username}</p>
-                  <p className="text-xs text-muted-foreground">{user.email}</p>
-                  <Badge variant={user.role === "manager" ? "default" : "secondary"} className="w-fit">
+                  <p className="font-medium theme-text-foreground">{user.username}</p>
+                  <p className="text-xs theme-text-muted">{user.email}</p>
+                  <Badge
+                    variant={user.role === "manager" ? "default" : "secondary"}
+                    className="w-fit theme-transition"
+                  >
                     {user.role === "manager" ? t("auth.manager") : t("auth.employee")}
                   </Badge>
                 </div>
               </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
+              <DropdownMenuSeparator className="theme-bg-muted" />
+              <DropdownMenuItem asChild className="theme-transition">
                 <Link href={profileHref}>
                   <User className="mr-2 h-4 w-4" />
                   <span>{t("navigation.profile")}</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
+              <DropdownMenuItem asChild className="theme-transition">
                 <Link href="/settings">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>{t("navigation.settings")}</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={onLogout}>
+              <DropdownMenuSeparator className="theme-bg-muted" />
+              <DropdownMenuItem onClick={onLogout} className="theme-transition">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>{t("auth.logout")}</span>
               </DropdownMenuItem>
@@ -143,16 +146,16 @@ export function Header({ user, onLogout }: HeaderProps) {
           {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="md:hidden">
+              <Button variant="ghost" size="sm" className="md:hidden theme-transition">
                 <Menu className="h-4 w-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <SheetContent side="right" className="w-[300px] sm:w-[400px] theme-adaptive-dialog">
               <nav className="flex flex-col space-y-4 mt-4">
                 <NavLinks mobile />
                 <Link
                   href={profileHref}
-                  className="block py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className="block py-2 text-sm font-medium theme-text-muted hover:theme-text-foreground theme-transition"
                 >
                   {t("navigation.profile")}
                 </Link>

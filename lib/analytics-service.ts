@@ -1,131 +1,120 @@
-import { apiService } from "./api"
+import { apiService } from './api'; // Your API client
+
+// Interfaces for all KPIs
+export interface UserAnalytics {
+  totalUsers: number;
+  usersByRole: { role: string; count: number }[];
+  usersByDepartment: { department: string; count: number }[];
+  usersByLocation: { location: string; count: number }[];
+  topParticipants: { userId: string; userName: string; participationCount: number }[];
+  topManagers: { managerId: string; managerName: string; managedEvents: number }[];
+  averageTasksAssigned: number;
+}
+
+export interface EventAnalytics {
+  totalEvents: number;
+  eventsByStatus: { status: string; count: number }[];
+  eventsByCategory: { category: string; count: number }[];
+  averageParticipants: number;
+  averageBudget: number;
+  totalBudget?: number;
+  topEventsByParticipants: { eventId: string; title: string; count: number }[];
+  averageFillRate: number;
+}
 
 export interface SeriesOverview {
-  seriesId: string
-  seriesName: string
-  participants: number
-  utilization: number | null
+  seriesId: string;
+  name: string;
+  description?: string;
+  totalEvents: number;
+  totalBudget: number;
+  taskCompletionRate: number;
 }
 
-export interface CategoryDistribution {
-  category: string
-  count: number
+export interface SeriesTrendItem {
+  eventId: string;
+  eventTitle: string;
+  year: number;
+  participantsCount: number;
+  budget: number;
 }
 
-export interface AnalyticsOverview {
-  seriesData: SeriesOverview[]
-  totalSeries: number
-  totalParticipants: number
-  averageUtilization: number
-}
-
-export interface RepeatParticipant {
-  userId: string
-  userName: string
-  participationCount: number
-  events: string[]
+export interface SeriesTrend {
+  trend: SeriesTrendItem[];
+  topParticipants: { userId: string; userName: string; eventsParticipated: number }[];
+  repeatParticipantCount: number;
 }
 
 export interface TopEvent {
-  eventId: string
-  eventName: string
-  participants: number
-  fillRate: number
+  eventId: string;
+  title: string;
+  series?: string | null;
+  participantsCount: number;
+  taskCompletionRate: number;
+  budget: number;
+  score: number;
 }
 
-export interface StatusBreakdown {
-  status: string
-  count: number
+export interface TaskAnalytics {
+  totalTasks: number;
+  tasksByStatus: { status: string; count: number }[];
+  overdueTasks: number;
+  averageCompletionTime: number;
+  topUsersByCompletedTasks: { userId: string; userName: string; completedCount: number }[];
 }
 
-export interface LocationDistribution {
-  location: string
-  count: number
+export interface CostAnalytics {
+  totalCosts: number;
+  costsByLabel: { label: string; total: number }[];
+  averageCostPerEvent: number;
 }
 
-export interface OrganizerPerformance {
-  organizerId: string
-  organizerName: string
-  totalEvents: number
-  averageParticipants: number
-}
-
-export interface LeadTimeStat {
-  eventId: string
-  leadTimeDays: number
-}
-
-export interface BudgetStat {
-  eventId: string
-  budget: number
+export interface ParticipantAnalytics {
+  totalUniqueParticipants: number;
+  averageParticipationPerUser: number;
 }
 
 class AnalyticsService {
-  // === Existing ===
-  async getOverview(year: number): Promise<AnalyticsOverview> {
-    return apiService.request(`/analytics/overview?year=${year}`, { method: "GET" }, false, 30000)
+  async getUserAnalytics(): Promise<UserAnalytics> {
+    return apiService.request('/analytics/users', { method: 'GET' }, false, 30000);
   }
 
-  async getCategoryDistribution(year: number): Promise<CategoryDistribution[]> {
-    return apiService.request(`/analytics/category-distribution?year=${year}`, { method: "GET" }, false, 30000)
+  async getEventAnalytics(year?: number): Promise<EventAnalytics> {
+    const params = year ? `?year=${year}` : '';
+    return apiService.request(`/analytics/events${params}`, { method: 'GET' }, false, 30000);
   }
 
-  async getRepeatParticipants(seriesId: string, year?: number): Promise<RepeatParticipant[]> {
-    const params = new URLSearchParams({ seriesId })
-    if (year) params.append("year", year.toString())
-    return apiService.request(`/analytics/repeat-participants?${params.toString()}`, { method: "GET" }, false, 30000)
+  async getSeriesOverview(): Promise<SeriesOverview[]> {
+    return apiService.request('/analytics/series', { method: 'GET' }, false, 30000);
   }
 
-  async getParticipationTrends(
-    year: number, // <- required
-    seriesId?: string,
-    timeframe: "month" | "quarter" | "year" = "month",
-  ) {
-    if (!year || Number.isNaN(year)) throw new Error("Year is required")
-
-    const params = new URLSearchParams({ year: year.toString(), timeframe })
-    if (seriesId) params.append("seriesId", seriesId)
-
-    return apiService.request(`/analytics/participation-trends?${params.toString()}`, { method: "GET" }, false, 30000)
+  async getSeriesTrend(seriesId: string): Promise<SeriesTrend> {
+    return apiService.request(`/analytics/series/${seriesId}/trend`, { method: 'GET' }, false, 30000);
   }
 
-  async getUtilizationMetrics(year: number) {
-    return apiService.request(`/analytics/utilization-metrics?year=${year}`, { method: "GET" }, false, 30000)
+  async getGlobalTopEvents(limit = 10): Promise<TopEvent[]> {
+    return apiService.request(`/analytics/events/top?limit=${limit}`, { method: 'GET' }, false, 30000);
   }
 
-  // === Re-added old endpoints ===
-  async getTopEvents(year: number, by: "participants" | "fillRate" = "participants", limit = 5): Promise<TopEvent[]> {
-    const params = new URLSearchParams({ year: year.toString(), by, limit: limit.toString() })
-    return apiService.request(`/analytics/top-events?${params.toString()}`, { method: "GET" }, false, 30000)
+  async getTaskAnalytics(): Promise<TaskAnalytics> {
+    return apiService.request('/analytics/tasks', { method: 'GET' }, false, 30000);
   }
 
-  async getStatusBreakdown(year: number): Promise<StatusBreakdown[]> {
-    return apiService.request(`/analytics/status-breakdown?year=${year}`, { method: "GET" }, false, 30000)
+  async getCostAnalytics(): Promise<CostAnalytics> {
+    return apiService.request('/analytics/costs', { method: 'GET' }, false, 30000);
   }
 
-  async getLocationDistribution(year: number): Promise<LocationDistribution[]> {
-    return apiService.request(`/analytics/location-distribution?year=${year}`, { method: "GET" }, false, 30000)
+  async getParticipantAnalytics(): Promise<ParticipantAnalytics> {
+    return apiService.request('/analytics/participants', { method: 'GET' }, false, 30000);
   }
 
-  async getOrganizerPerformance(year: number): Promise<OrganizerPerformance[]> {
-    return apiService.request(`/analytics/organizer-performance?year=${year}`, { method: "GET" }, false, 30000)
+  async getAvailableYears(): Promise<{ years: number[] }> {
+    return apiService.request('/analytics/years', { method: 'GET' }, false, 30000);
   }
 
-  async getLeadTimeStats(year: number): Promise<LeadTimeStat[]> {
-    return apiService.request(`/analytics/lead-time?year=${year}`, { method: "GET" }, false, 30000)
-  }
-
-  async getBudgetStats(year: number): Promise<BudgetStat[]> {
-    return apiService.request(`/analytics/budget?year=${year}`, { method: "GET" }, false, 30000)
-  }
-
-  async getSeriesYearlyStats(seriesId: string): Promise<any> {
-    return apiService.request(`/analytics/series/${seriesId}/yearly-stats`, { method: "GET" }, false, 30000)
-  }
-
-  async getSeriesOverview(year: number): Promise<SeriesOverview[]> {
-    return apiService.request(`/analytics/series-overview?year=${year}`, { method: "GET" }, false, 30000)
+  async getEventsList(): Promise<{ id: string; title: string; year: number }[]> {
+    return apiService.request('/analytics/events/list', { method: 'GET' }, false, 30000);
   }
 }
 
-export const analyticsService = new AnalyticsService()
+export const analyticsService = new AnalyticsService();

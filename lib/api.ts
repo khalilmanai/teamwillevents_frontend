@@ -313,6 +313,20 @@ class ApiService {
       true,
     )
   }
+  async uploadEventImage(eventId: string, file: File): Promise<{ imageUrl: string; publicId: string }> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return this.request<{ imageUrl: string; publicId: string }>(
+    `/events/${eventId}/image`,
+    {
+      method: "POST",
+      body: formData,
+    },
+    true // skipJson to avoid overriding Content-Type for FormData
+  );
+}
+
 
   async deleteUserAvatar(): Promise<void> {
     return this.request("/users/me/avatar", { method: "DELETE" })
@@ -938,7 +952,24 @@ class ApiService {
     this.activeRequests.clear()
     this.pendingRequests.clear()
   }
+
+
+
+async managersList(search?: string): Promise<User[]> {
+  // Construct query string if search is provided
+  const query = search ? `?search=${encodeURIComponent(search)}` : '';
+  
+  return await this.request(`/users/managers${query}`, { method: 'GET' }, false, 60000);
 }
 
+  async getFeedback(eventId: string) {
+    const response = this.request(`/feedback/event/${eventId}` , { method: "GET" }, false, 30000)
+    if (!response) {
+      throw new Error("Failed to fetch feedback")
+    }
+    return response
+  }
+
+}
 export const apiService = new ApiService()
 
